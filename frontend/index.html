@@ -3,54 +3,91 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculadora con Backend</title>
+    <title>Calculadora &mdash; Modo Comando</title>
     <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
+<div class="app">
 
-    <div class="calculator">
-
-        <!-- Pantalla -->
-        <div class="screen">
-            <div class="screen-expression" id="expression"></div>
-            <div class="screen-display" id="display">0</div>
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">&lt;/&gt;</div>
+            <div>
+                <div class="header-title">Calculadora</div>
+                <div class="header-sub">Modo Comando</div>
+            </div>
         </div>
-
-        <!-- Botones -->
-        <div class="buttons">
-            <!-- Fila 1: funciones -->
-            <button class="btn btn-fn" data-action="clear">C</button>
-            <button class="btn btn-fn" data-action="backspace">⌫</button>
-            <button class="btn btn-op" data-action="op" data-op="raiz">√</button>
-            <button class="btn btn-op" data-action="op" data-op="potencia">xʸ</button>
-
-            <!-- Fila 2 -->
-            <button class="btn btn-num" data-action="digit" data-digit="7">7</button>
-            <button class="btn btn-num" data-action="digit" data-digit="8">8</button>
-            <button class="btn btn-num" data-action="digit" data-digit="9">9</button>
-            <button class="btn btn-op" data-action="op" data-op="dividir">÷</button>
-
-            <!-- Fila 3 -->
-            <button class="btn btn-num" data-action="digit" data-digit="4">4</button>
-            <button class="btn btn-num" data-action="digit" data-digit="5">5</button>
-            <button class="btn btn-num" data-action="digit" data-digit="6">6</button>
-            <button class="btn btn-op" data-action="op" data-op="multiplicar">×</button>
-
-            <!-- Fila 4 -->
-            <button class="btn btn-num" data-action="digit" data-digit="1">1</button>
-            <button class="btn btn-num" data-action="digit" data-digit="2">2</button>
-            <button class="btn btn-num" data-action="digit" data-digit="3">3</button>
-            <button class="btn btn-op" data-action="op" data-op="restar">−</button>
-
-            <!-- Fila 5 -->
-            <button class="btn btn-num" data-action="digit" data-digit="0">0</button>
-            <button class="btn btn-num" data-action="decimal">.</button>
-            <button class="btn btn-eq" data-action="equals">=</button>
-            <button class="btn btn-op" data-action="op" data-op="sumar">+</button>
+        <div class="header-right">
+            <button class="icon-btn" id="btnTheme" title="Cambiar tema">&#9728;</button>
+            <label class="toggle-switch">
+                <input type="checkbox" id="themeToggle">
+                <span class="slider"></span>
+            </label>
+            <button class="icon-btn" title="Configuracion">&#9881;</button>
         </div>
+    </header>
+
+    <div class="layout">
+
+        <main class="main-panel">
+
+            <div class="input-card" id="inputCard">
+                <div class="input-label-top">Escrib&#237; tu operaci&#243;n...</div>
+                <div class="input-row">
+                    <input type="text" id="inputExpr" class="input-expr"
+                           placeholder="(12.5 * 8) - 7^2 / 4" autocomplete="off" autofocus />
+                    <button class="btn-menu" title="Opciones">&#8942;</button>
+                    <button class="btn-calcular" id="btnCalcular">&#9654; Calcular</button>
+                </div>
+                <div class="input-bar" id="inputBar"></div>
+            </div>
+
+            <div class="result-card" id="resultCard">
+                <div class="result-header">
+                    <span class="result-label">&#9660; Resultado</span>
+                    <span class="result-value" id="resultValue"></span>
+                </div>
+                <div class="result-status" id="resultStatus"></div>
+            </div>
+
+            <div class="operators-card">
+                <div class="operators-title">
+                    <span class="line"></span>
+                    <span>Operadores Disponibles</span>
+                    <span class="line"></span>
+                </div>
+                <div class="operators-grid">
+                    <button class="op-btn op-math"  data-insert="+">+</button>
+                    <button class="op-btn op-math"  data-insert="-">&minus;</button>
+                    <button class="op-btn op-math"  data-insert="*">*</button>
+                    <button class="op-btn op-div"   data-insert="/">/</button>
+                    <button class="op-btn op-pow"   data-insert="^">^</button>
+                    <button class="op-btn op-paren" data-insert="( )">( )</button>
+                    <button class="op-btn op-fn"    data-insert="sqrt(">sqrt()</button>
+                    <button class="op-btn op-sin"   data-insert="sin(">sin()</button>
+                    <button class="op-btn op-cos"   data-insert="cos(">cos()</button>
+                </div>
+            </div>
+
+            <div class="shortcuts-bar">
+                <div class="shortcut"><kbd>Enter</kbd> = Calcular</div>
+                <div class="shortcut"><kbd>Esc</kbd> = Limpiar</div>
+                <div class="shortcut"><kbd>?</kbd> = Ayuda</div>
+            </div>
+
+        </main>
+
+        <aside class="history-panel">
+            <div class="history-header">
+                <span class="history-title">Historial</span>
+                <button class="icon-btn" title="Opciones">&#8943;</button>
+            </div>
+            <div class="history-list" id="historialLista"></div>
+            <button class="btn-limpiar-hist" id="btnLimpiarHist">&#128465; Limpiar</button>
+        </aside>
 
     </div>
-
-    <script src="js/app.js"></script>
+</div>
+<script src="js/app.js"></script>
 </body>
 </html>

@@ -1,206 +1,158 @@
 const API_BASE = "http://127.0.0.1:5000/api/calculadora";
 
-const displayEl    = document.getElementById("display");
-const expressionEl = document.getElementById("expression");
+const inputExpr    = document.getElementById("inputExpr");
+const inputCard    = document.getElementById("inputCard");
+const btnCalcular  = document.getElementById("btnCalcular");
+const resultValue  = document.getElementById("resultValue");
+const resultStatus = document.getElementById("resultStatus");
+const historialLista = document.getElementById("historialLista");
+const btnLimpiarHist = document.getElementById("btnLimpiarHist");
+const themeToggle  = document.getElementById("themeToggle");
+const btnTheme     = document.getElementById("btnTheme");
 
-// --- Estado de la calculadora ---
-let estado = {
-    primerNum:       null,    // primer operando guardado
-    operacion:       null,    // operación seleccionada
-    display:         "0",     // lo que se muestra en pantalla
-    esperandoB:      false,   // ¿el próximo dígito es el segundo operando?
-    calculado:       false,   // ¿se acaba de mostrar un resultado?
-};
-
-const SIMBOLOS = {
-    sumar:       "+",
-    restar:      "−",
-    multiplicar: "×",
-    dividir:     "÷",
-    potencia:    "xʸ",
-    raiz:        "√",
-};
-
-// --- Renderizar pantalla ---
-function render() {
-    displayEl.textContent = estado.display;
-    displayEl.className   = "screen-display";
+// ---- Tema claro / oscuro ----
+function aplicarTema(claro) {
+    document.body.classList.toggle("light", claro);
+    themeToggle.checked = claro;
+    // Icono del boton: sol = oscuro activo, luna = claro activo
+    btnTheme.textContent = claro ? "\u263D" : "\u2600";
+    localStorage.setItem("tema", claro ? "light" : "dark");
 }
 
-function mostrarExpresion(texto) {
-    expressionEl.textContent = texto;
+// Cargar preferencia guardada (o preferencia del sistema)
+const temaGuardado = localStorage.getItem("tema");
+if (temaGuardado) {
+    aplicarTema(temaGuardado === "light");
+} else {
+    aplicarTema(window.matchMedia("(prefers-color-scheme: light)").matches);
 }
 
-function mostrarError(msg) {
-    displayEl.textContent = msg;
-    displayEl.className   = "screen-display error";
-    mostrarExpresion("");
-    resetEstado();
+// Eventos del toggle y del boton
+themeToggle.addEventListener("change", () => aplicarTema(themeToggle.checked));
+btnTheme.addEventListener("click",    () => aplicarTema(!themeToggle.checked));
+
+// Glow en el input al enfocar
+inputExpr.addEventListener("focus", () => inputCard.classList.add("focused"));
+inputExpr.addEventListener("blur",  () => inputCard.classList.remove("focused"));
+
+// Botones de operadores: insertan texto en el input
+document.querySelector(".operators-grid").addEventListener("click", (e) => {
+    const btn = e.target.closest(".op-btn");
+    if (!btn) return;
+    const insert = btn.dataset.insert;
+    insertarEnInput(insert === "( )" ? "(" : insert);
+    inputExpr.focus();
+});
+
+function insertarEnInput(texto) {
+    const s   = inputExpr.selectionStart;
+    const e   = inputExpr.selectionEnd;
+    const val = inputExpr.value;
+    inputExpr.value = val.slice(0, s) + texto + val.slice(e);
+    const pos = s + texto.length;
+    inputExpr.setSelectionRange(pos, pos);
 }
 
-function resetEstado() {
-    estado = { primerNum: null, operacion: null, display: "0",
-               esperandoB: false, calculado: false };
-    // quitar botón activo
-    document.querySelectorAll(".btn-op.active")
-            .forEach(b => b.classList.remove("active"));
-}
+// Calcular
+btnCalcular.addEventListener("click", () => calcular());
 
-// --- Acciones ---
-function presionarDigito(digito) {
-    if (estado.calculado || estado.esperandoB) {
-        estado.display    = digito;
-        estado.esperandoB = false;
-        estado.calculado  = false;
-    } else {
-        if (estado.display === "0") {
-            estado.display = digito;
-        } else {
-            if (estado.display.length >= 12) return; // límite de dígitos
-            estado.display += digito;
-        }
-    }
-    render();
-}
+inputExpr.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter")  { ev.preventDefault(); calcular(); }
+    if (ev.key === "Escape") { limpiarTodo(); }
+    if (ev.key === "?")      { ev.preventDefault(); mostrarAyuda(); }
+});
 
-function presionarDecimal() {
-    if (estado.esperandoB || estado.calculado) {
-        estado.display    = "0.";
-        estado.esperandoB = false;
-        estado.calculado  = false;
-    } else if (!estado.display.includes(".")) {
-        estado.display += ".";
-    }
-    render();
-}
+async function calcular() {
+    const expr = inputExpr.value.trim();
+    if (!expr) { setStatus("Escribe una expresion primero", "error"); return; }
 
-function presionarOperacion(op, boton) {
-    // Quitar clase activa de otros botones de operación
-    document.querySelectorAll(".btn-op").forEach(b => b.classList.remove("active"));
-    boton.classList.add("active");
-
-    if (op === "raiz") {
-        // Raíz cuadrada: opera directamente sobre el número en pantalla
-        estado.primerNum = parseFloat(estado.display);
-        estado.operacion = "raiz";
-        mostrarExpresion(`√ ${estado.primerNum}`);
-        calcular();
-        return;
-    }
-
-    // Si ya hay una operación pendiente y un segundo número, calcula primero
-    if (estado.primerNum !== null && !estado.esperandoB && !estado.calculado) {
-        ejecutarCalculo(parseFloat(estado.display));
-        return;
-    }
-
-    estado.primerNum  = parseFloat(estado.display);
-    estado.operacion  = op;
-    estado.esperandoB = true;
-    estado.calculado  = false;
-    mostrarExpresion(`${estado.primerNum} ${SIMBOLOS[op]}`);
-}
-
-function presionarIgual() {
-    if (estado.operacion === null || estado.esperandoB) return;
-    ejecutarCalculo(parseFloat(estado.display));
-}
-
-async function ejecutarCalculo(b) {
-    const a  = estado.primerNum;
-    const op = estado.operacion;
-    const body = op === "raiz" ? { a } : { a, b };
-
-    // Deshabilitar todos los botones durante la petición
-    document.querySelectorAll(".btn").forEach(b => b.disabled = true);
-    displayEl.textContent = "…";
+    btnCalcular.disabled = true;
+    resultValue.textContent = "";
+    setStatus("Calculando...", "");
 
     try {
-        const res  = await fetch(`${API_BASE}/${op}`, {
+        const res  = await fetch(API_BASE + "/evaluar", {
             method:  "POST",
             headers: { "Content-Type": "application/json" },
-            body:    JSON.stringify(body),
+            body:    JSON.stringify({ expresion: expr }),
         });
         const data = await res.json();
 
         if (data.error) {
-            const exprAntes = expressionEl.textContent;
-            mostrarExpresion(exprAntes);
-            mostrarError(data.error);
+            setStatus("\u2717 " + data.error, "error");
+            agregarHistorial(expr, data.error, true);
         } else {
-            const expr = op === "raiz"
-                ? `√ ${a} =`
-                : `${a} ${SIMBOLOS[op]} ${b} =`;
-            mostrarExpresion(expr);
-
-            // Redondear flotantes largos
-            const res = parseFloat(data.resultado.toFixed(10));
-            estado.display    = String(res);
-            estado.primerNum  = null;
-            estado.operacion  = null;
-            estado.calculado  = true;
-            estado.esperandoB = false;
-            render();
-            document.querySelectorAll(".btn-op").forEach(b => b.classList.remove("active"));
+            const valor = formatear(data.resultado);
+            resultValue.textContent = "= " + valor;
+            setStatus("\u2713 Operaci\u00f3n v\u00e1lida", "ok");
+            agregarHistorial(expr, valor, false);
         }
     } catch {
-        mostrarError("Sin conexión con el servidor");
+        setStatus("\u2717 Sin conexi\u00f3n con el servidor", "error");
     } finally {
-        document.querySelectorAll(".btn").forEach(b => b.disabled = false);
+        btnCalcular.disabled = false;
     }
 }
 
-function calcular() {
-    ejecutarCalculo(null);
+function formatear(num) {
+    const r = parseFloat(num.toFixed(10));
+    return String(r);
 }
 
-// --- Delegación de eventos en el grid de botones ---
-document.querySelector(".buttons").addEventListener("click", (e) => {
-    const btn    = e.target.closest(".btn");
-    if (!btn) return;
-    const action = btn.dataset.action;
+function setStatus(texto, tipo) {
+    resultStatus.textContent = texto;
+    resultStatus.className = "result-status" + (tipo ? " " + tipo : "");
+}
 
-    switch (action) {
-        case "digit":
-            presionarDigito(btn.dataset.digit);
-            break;
-        case "decimal":
-            presionarDecimal();
-            break;
-        case "op":
-            presionarOperacion(btn.dataset.op, btn);
-            break;
-        case "equals":
-            presionarIgual();
-            break;
-        case "clear":
-            resetEstado();
-            estado.display = "0";
-            render();
-            mostrarExpresion("");
-            break;
-        case "backspace":
-            if (estado.calculado) { resetEstado(); estado.display = "0"; render(); break; }
-            estado.display = estado.display.length > 1
-                ? estado.display.slice(0, -1)
-                : "0";
-            render();
-            break;
-    }
+function limpiarTodo() {
+    inputExpr.value = "";
+    resultValue.textContent = "";
+    setStatus("", "");
+    inputExpr.focus();
+}
+
+function mostrarAyuda() {
+    alert(
+        "Sintaxis disponible:\n" +
+        "  + - * /          Operaciones basicas\n" +
+        "  ^                Potencia  (ej: 2^8)\n" +
+        "  sqrt(x)          Raiz cuadrada\n" +
+        "  sin(x)  cos(x)   Trigonometria en grados\n" +
+        "  tan(x)           Tangente en grados\n" +
+        "  ( )              Parentesis\n" +
+        "  pi, e            Constantes\n\n" +
+        "Ejemplos:\n" +
+        "  (12.5 * 8) - 7^2 / 4\n" +
+        "  sin(30) * 100\n" +
+        "  sqrt(144) + pi"
+    );
+}
+
+function agregarHistorial(expr, resultado, esError) {
+    const item = document.createElement("div");
+    item.className = "hist-item" + (esError ? " error" : "");
+
+    const exprEl = document.createElement("span");
+    exprEl.className   = "hist-expr";
+    exprEl.textContent = expr;
+
+    const resEl = document.createElement("span");
+    resEl.className   = "hist-result";
+    resEl.textContent = "= " + resultado;
+
+    item.appendChild(exprEl);
+    item.appendChild(resEl);
+
+    // Click rellena el input con esa expresion
+    item.addEventListener("click", () => {
+        inputExpr.value = expr;
+        inputExpr.focus();
+    });
+
+    historialLista.prepend(item);
+    while (historialLista.children.length > 30) historialLista.lastChild.remove();
+}
+
+btnLimpiarHist.addEventListener("click", () => {
+    historialLista.innerHTML = "";
 });
-
-// --- Teclado físico ---
-document.addEventListener("keydown", (e) => {
-    if (e.key >= "0" && e.key <= "9")       presionarDigito(e.key);
-    else if (e.key === ".")                  presionarDecimal();
-    else if (e.key === "+")                  presionarOperacion("sumar",       document.querySelector('[data-op="sumar"]'));
-    else if (e.key === "-")                  presionarOperacion("restar",      document.querySelector('[data-op="restar"]'));
-    else if (e.key === "*")                  presionarOperacion("multiplicar", document.querySelector('[data-op="multiplicar"]'));
-    else if (e.key === "/") { e.preventDefault(); presionarOperacion("dividir", document.querySelector('[data-op="dividir"]')); }
-    else if (e.key === "Enter" || e.key === "=") presionarIgual();
-    else if (e.key === "Backspace")           document.querySelector('[data-action="backspace"]').click();
-    else if (e.key === "Escape")             document.querySelector('[data-action="clear"]').click();
-});
-
-// Render inicial
-render();

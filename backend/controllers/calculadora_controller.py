@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from services.calculadora_service import (
-    sumar, restar, multiplicar, dividir, potencia, raiz
+    sumar, restar, multiplicar, dividir, potencia, raiz, evaluar
 )
 
 calculadora_bp = Blueprint("calculadora", __name__)
@@ -48,6 +48,17 @@ def ruta_raiz():
     datos = request.get_json()
     a = datos.get("a")
     resultado = raiz(a)
+    if isinstance(resultado, dict):
+        return jsonify(resultado)
+    return jsonify({"resultado": resultado})
+
+@calculadora_bp.post("/evaluar")
+def ruta_evaluar():
+    datos = request.get_json()
+    expresion = datos.get("expresion", "").strip()
+    if not expresion:
+        return jsonify({"error": "La expresion esta vacia"}), 400
+    resultado = evaluar(expresion)
     if isinstance(resultado, dict):
         return jsonify(resultado)
     return jsonify({"resultado": resultado})
