@@ -31,7 +31,10 @@ def ruta_dividir():
     datos = request.get_json()
     a = datos.get("a")
     b = datos.get("b")
-    return jsonify(dividir(a, b))
+    resultado = dividir(a, b)
+    if isinstance(resultado, dict):
+        return jsonify(resultado)
+    return jsonify({"resultado": resultado})
 
 @calculadora_bp.post("/potencia")
 def ruta_potencia():
@@ -44,4 +47,7 @@ def ruta_potencia():
 def ruta_raiz():
     datos = request.get_json()
     a = datos.get("a")
-    return jsonify(raiz(a))
+    resultado = raiz(a)
+    if isinstance(resultado, dict):
+        return jsonify(resultado)
+    return jsonify({"resultado": resultado})

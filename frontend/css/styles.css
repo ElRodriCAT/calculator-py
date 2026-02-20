@@ -1,0 +1,143 @@
+/* === Reset & base === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e5ec;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+/* === Tarjeta principal === */
+.calculator {
+    background: #e0e5ec;
+    border-radius: 28px;
+    padding: 28px;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    box-shadow:
+        12px 12px 24px #b8bec7,
+        -12px -12px 24px #ffffff;
+}
+
+/* === Pantalla === */
+.screen {
+    background: #e0e5ec;
+    border-radius: 18px;
+    padding: 16px 20px 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    min-height: 88px;
+    justify-content: flex-end;
+    box-shadow:
+        inset 6px 6px 12px #b8bec7,
+        inset -6px -6px 12px #ffffff;
+    overflow: hidden;
+}
+
+.screen-expression {
+    font-size: 0.82rem;
+    color: #9aa5b4;
+    min-height: 18px;
+    word-break: break-all;
+    text-align: right;
+}
+
+.screen-display {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #3a3a3a;
+    word-break: break-all;
+    text-align: right;
+    line-height: 1.1;
+}
+
+.screen-display.error {
+    font-size: 1rem;
+    color: #e74c3c;
+}
+
+/* === Grid de botones === */
+.buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+}
+
+/* === Botón base (neumórfico) === */
+.btn {
+    aspect-ratio: 1;
+    border: none;
+    border-radius: 14px;
+    background: #e0e5ec;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: #4a4a4a;
+    box-shadow:
+        5px 5px 10px #b8bec7,
+        -5px -5px 10px #ffffff;
+    transition: box-shadow 0.12s ease, color 0.12s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn:hover {
+    box-shadow:
+        7px 7px 14px #b0b8c1,
+        -7px -7px 14px #ffffff;
+}
+
+.btn:active {
+    box-shadow:
+        inset 4px 4px 8px #b8bec7,
+        inset -4px -4px 8px #ffffff;
+}
+
+/* === Variantes de color === */
+.btn-num  { color: #3a3a3a; }
+
+.btn-op {
+    color: #5b7cfa;
+}
+.btn-op:hover { color: #3a5ce5; }
+
+.btn-fn {
+    color: #7a8499;
+    font-size: 1rem;
+}
+.btn-fn:hover { color: #4a4a4a; }
+
+.btn-eq {
+    background: #5b7cfa;
+    color: #ffffff;
+    box-shadow:
+        5px 5px 10px #b8bec7,
+        -5px -5px 10px #ffffff;
+}
+.btn-eq:hover {
+    background: #4a6be8;
+    box-shadow:
+        7px 7px 14px #b0b8c1,
+        -7px -7px 14px #ffffff;
+}
+.btn-eq:active {
+    box-shadow:
+        inset 4px 4px 8px #4055c0,
+        inset -4px -4px 8px #7a9fff;
+}
+
+/* Botón activo (operación seleccionada) */
+.btn-op.active {
+    box-shadow:
+        inset 4px 4px 8px #b8bec7,
+        inset -4px -4px 8px #ffffff;
+    color: #3a5ce5;
+}

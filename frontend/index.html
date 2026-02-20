@@ -8,24 +8,47 @@
 </head>
 <body>
 
-    <h1>Calculadora con Python + Flask</h1>
-
     <div class="calculator">
-        <input type="number" id="numA" placeholder="Número A">
-        <input type="number" id="numB" placeholder="Número B">
 
-        <select id="operacion">
-            <option value="sumar">Sumar</option>
-            <option value="restar">Restar</option>
-            <option value="multiplicar">Multiplicar</option>
-            <option value="dividir">Dividir</option>
-            <option value="potencia">Potencia</option>
-            <option value="raiz">Raíz (solo A)</option>
-        </select>
+        <!-- Pantalla -->
+        <div class="screen">
+            <div class="screen-expression" id="expression"></div>
+            <div class="screen-display" id="display">0</div>
+        </div>
 
-        <button id="btnCalcular">Calcular</button>
+        <!-- Botones -->
+        <div class="buttons">
+            <!-- Fila 1: funciones -->
+            <button class="btn btn-fn" data-action="clear">C</button>
+            <button class="btn btn-fn" data-action="backspace">⌫</button>
+            <button class="btn btn-op" data-action="op" data-op="raiz">√</button>
+            <button class="btn btn-op" data-action="op" data-op="potencia">xʸ</button>
 
-        <h2>Resultado: <span id="resultado"></span></h2>
+            <!-- Fila 2 -->
+            <button class="btn btn-num" data-action="digit" data-digit="7">7</button>
+            <button class="btn btn-num" data-action="digit" data-digit="8">8</button>
+            <button class="btn btn-num" data-action="digit" data-digit="9">9</button>
+            <button class="btn btn-op" data-action="op" data-op="dividir">÷</button>
+
+            <!-- Fila 3 -->
+            <button class="btn btn-num" data-action="digit" data-digit="4">4</button>
+            <button class="btn btn-num" data-action="digit" data-digit="5">5</button>
+            <button class="btn btn-num" data-action="digit" data-digit="6">6</button>
+            <button class="btn btn-op" data-action="op" data-op="multiplicar">×</button>
+
+            <!-- Fila 4 -->
+            <button class="btn btn-num" data-action="digit" data-digit="1">1</button>
+            <button class="btn btn-num" data-action="digit" data-digit="2">2</button>
+            <button class="btn btn-num" data-action="digit" data-digit="3">3</button>
+            <button class="btn btn-op" data-action="op" data-op="restar">−</button>
+
+            <!-- Fila 5 -->
+            <button class="btn btn-num" data-action="digit" data-digit="0">0</button>
+            <button class="btn btn-num" data-action="decimal">.</button>
+            <button class="btn btn-eq" data-action="equals">=</button>
+            <button class="btn btn-op" data-action="op" data-op="sumar">+</button>
+        </div>
+
     </div>
 
     <script src="js/app.js"></script>
