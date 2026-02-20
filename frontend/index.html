@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora con Backend</title>
+    <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+    <h1>Calculadora con Python + Flask</h1>
+
+    <div class="calculator">
+        <input type="number" id="numA" placeholder="Número A">
+        <input type="number" id="numB" placeholder="Número B">
+
+        <select id="operacion">
+            <option value="sumar">Sumar</option>
+            <option value="restar">Restar</option>
+            <option value="multiplicar">Multiplicar</option>
+            <option value="dividir">Dividir</option>
+            <option value="potencia">Potencia</option>
+            <option value="raiz">Raíz (solo A)</option>
+        </select>
+
+        <button id="btnCalcular">Calcular</button>
+
+        <h2>Resultado: <span id="resultado"></span></h2>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
