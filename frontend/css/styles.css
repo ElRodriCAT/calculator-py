@@ -170,12 +170,13 @@ body {
     margin-bottom: .9rem; text-transform: uppercase; letter-spacing: .5px;
 }
 .operators-title .line { flex: 1; height: 1px; background: var(--border); }
-.operators-grid { display: flex; flex-wrap: wrap; gap: .55rem; }
+.operators-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: .55rem; }
 
 .op-btn {
-    padding: .45rem .85rem; border-radius: 8px; border: 1px solid var(--border);
+    padding: .45rem .4rem; border-radius: 8px; border: 1px solid var(--border);
     background: var(--bg3); font-size: .92rem; font-weight: 700;
     cursor: pointer; color: var(--text); font-family: 'Courier New', monospace;
+    text-align: center; width: 100%;
     transition: background .15s, border-color .15s, transform .1s, box-shadow .15s;
 }
 .op-btn:hover  { background: var(--bg); border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 10px rgba(0,229,200,.12); }

@@ -35,14 +35,51 @@ btnTheme.addEventListener("click",    () => aplicarTema(!themeToggle.checked));
 inputExpr.addEventListener("focus", () => inputCard.classList.add("focused"));
 inputExpr.addEventListener("blur",  () => inputCard.classList.remove("focused"));
 
+// Bloquear letras: solo permitir digitos, operadores y teclas de control
+// Caracteres validos: 0-9  .  +  -  *  /  ^  (  )  espacio
+const CHARS_VALIDOS = /^[0-9.+\-*\/^() ]$/;
+inputExpr.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter")  { ev.preventDefault(); calcular(); return; }
+    if (ev.key === "Escape") { limpiarTodo(); return; }
+    if (ev.key === "?")      { ev.preventDefault(); mostrarAyuda(); return; }
+    // Permitir teclas de control (Backspace, Delete, flechas, etc.)
+    if (ev.key.length > 1)   return;
+    // Bloquear cualquier caracter que no sea valido
+    if (!CHARS_VALIDOS.test(ev.key)) ev.preventDefault();
+});
+
+// Bloquear pegado con letras
+inputExpr.addEventListener("paste", (ev) => {
+    const texto = (ev.clipboardData || window.clipboardData).getData("text");
+    if (/[a-zA-Z]/.test(texto)) {
+        ev.preventDefault();
+        setStatus("Solo se permiten n\u00fameros y operadores b\u00e1sicos", "error");
+    }
+});
+
 // Botones de operadores: insertan texto en el input
 document.querySelector(".operators-grid").addEventListener("click", (e) => {
     const btn = e.target.closest(".op-btn");
     if (!btn) return;
-    const insert = btn.dataset.insert;
-    insertarEnInput(insert === "( )" ? "(" : insert);
+
+    let insert = btn.dataset.insert;
+
+    if (insert === "( )") {
+        insert = obtenerParentesis(); 
+    }
+
+    insertarEnInput(insert);
     inputExpr.focus();
 });
+
+// Alterna entre "(" y ")"
+let parentesisAbierto = false;
+
+function obtenerParentesis() {
+    parentesisAbierto = !parentesisAbierto;
+    return parentesisAbierto ? "(" : ")";
+}
+
 
 function insertarEnInput(texto) {
     const s   = inputExpr.selectionStart;
@@ -56,15 +93,15 @@ function insertarEnInput(texto) {
 // Calcular
 btnCalcular.addEventListener("click", () => calcular());
 
-inputExpr.addEventListener("keydown", (ev) => {
-    if (ev.key === "Enter")  { ev.preventDefault(); calcular(); }
-    if (ev.key === "Escape") { limpiarTodo(); }
-    if (ev.key === "?")      { ev.preventDefault(); mostrarAyuda(); }
-});
-
 async function calcular() {
     const expr = inputExpr.value.trim();
-    if (!expr) { setStatus("Escribe una expresion primero", "error"); return; }
+    if (!expr) { setStatus("Escribe una expresi\u00f3n primero", "error"); return; }
+
+    // Validar que la expresion solo contiene numeros y operadores basicos
+    if (/[a-zA-Z]/.test(expr)) {
+        setStatus("\u2717 Solo se permiten n\u00fameros y operadores b\u00e1sicos ( + - * / ^ )", "error");
+        return;
+    }
 
     btnCalcular.disabled = true;
     resultValue.textContent = "";
