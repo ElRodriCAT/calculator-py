@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conversor de Unidades</title>
+  <link rel="stylesheet" href="css/converter.css" />
+</head>
+<body>
+  <main class="converter">
+    <header class="converter__header">
+      <h1 class="converter__title">Conversor de Unidades</h1>
+      <p class="converter__subtitle">Longitud, peso y temperatura en un solo lugar</p>
+    </header>
+
+    <section class="converter__panel" aria-label="Panel de conversion">
+      <label class="converter__label" for="category">Categoria</label>
+      <select id="category" class="converter__select" aria-label="Seleccionar categoria">
+        <option value="length">Longitud</option>
+        <option value="weight">Peso</option>
+        <option value="temperature">Temperatura</option>
+      </select>
+
+      <div class="converter__row">
+        <div class="converter__field">
+          <label class="converter__label" for="fromUnit">Unidad origen</label>
+          <select id="fromUnit" class="converter__select" aria-label="Seleccionar unidad origen"></select>
+        </div>
+        <div class="converter__field">
+          <label class="converter__label" for="toUnit">Unidad destino</label>
+          <select id="toUnit" class="converter__select" aria-label="Seleccionar unidad destino"></select>
+        </div>
+      </div>
+
+      <label class="converter__label" for="inputValue">Valor</label>
+      <input
+        id="inputValue"
+        class="converter__input"
+        type="number"
+        inputmode="decimal"
+        placeholder="Ingresa un numero"
+        aria-label="Valor a convertir"
+      />
+
+      <button id="convertBtn" class="converter__button" type="button">Convertir</button>
+
+      <div class="converter__result" aria-live="polite">
+        <span class="converter__result-label">Resultado</span>
+        <span id="resultValue" class="converter__result-value">--</span>
+      </div>
+
+      <p id="errorMessage" class="converter__error" role="alert"></p>
+    </section>
+  </main>
+
+  <script src="js/converter.js"></script>
+</body>
+</html>
