@@ -1,0 +1,283 @@
+/* ══════════════════════════════════════════════
+   Calculadora Científica – scientific.css
+   Tema oscuro, estilo moderno con glow sutil.
+   Independiente del CSS de la calculadora estándar.
+   ══════════════════════════════════════════════ */
+
+/* ── Variables ── */
+:root {
+  --sci-bg:        #07101f;
+  --sci-bg2:       #0d1b2e;
+  --sci-bg3:       #112240;
+  --sci-border:    #1e3558;
+  --sci-accent:    #00e5c8;
+  --sci-accent2:   #2563eb;
+  --sci-text:      #e2eaf4;
+  --sci-muted:     #5a7a9e;
+  --sci-dim:       #8aaabb;
+  --sci-fn-bg:     #0f2340;
+  --sci-fn-hover:  #163256;
+  --sci-num-bg:    #10243d;
+  --sci-num-hover: #17305a;
+  --sci-op-bg:     #0a1e3a;
+  --sci-op-hover:  #112650;
+  --sci-eq-glow:   rgba(0, 229, 200, 0.45);
+  --sci-red:       #ef4444;
+  --sci-green:     #22c55e;
+  --sci-radius:    10px;
+  --sci-gap:       7px;
+}
+
+/* ── Reset mínimo ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Roboto, 'Courier New', monospace;
+}
+
+/* ── Contenedor raíz ── */
+body {
+  background: var(--sci-bg);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+/* ── Calculadora ── */
+.sci-calc {
+  width: 100%;
+  max-width: 400px;
+  background: var(--sci-bg2);
+  border: 1px solid var(--sci-border);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow:
+    0 0 40px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(0, 229, 200, 0.06);
+}
+
+/* ── Display ── */
+.sci-display {
+  background: var(--sci-bg);
+  border: 1px solid var(--sci-border);
+  border-radius: 12px;
+  padding: 14px 16px 10px;
+  margin-bottom: 16px;
+  min-height: 96px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 6px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.sci-expr-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.sci-expr-label {
+  font-size: 10px;
+  color: var(--sci-accent);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin-top: 3px;
+  flex-shrink: 0;
+  opacity: .7;
+}
+
+/* Expresión que el usuario escribe */
+.sci-expr {
+  flex: 1;
+  font-size: 18px;
+  color: var(--sci-text);
+  word-break: break-all;
+  min-height: 26px;
+  line-height: 1.4;
+  transition: color .2s;
+}
+
+.sci-expr.error {
+  color: var(--sci-red);
+  font-size: 14px;
+}
+
+/* Resultado */
+.sci-result-wrap {
+  text-align: right;
+}
+
+.sci-result {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--sci-accent);
+  letter-spacing: -.02em;
+  min-height: 36px;
+  text-shadow: 0 0 18px rgba(0, 229, 200, 0.5);
+  transition: color .2s, text-shadow .2s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sci-result.error {
+  color: var(--sci-red);
+  text-shadow: 0 0 12px rgba(239, 68, 68, 0.4);
+  font-size: 16px;
+}
+
+/* ── Grilla de botones ── */
+.sci-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: var(--sci-gap);
+}
+
+/* ── Botón base ── */
+.sci-btn {
+  height: 50px;
+  border: 1px solid var(--sci-border);
+  border-radius: var(--sci-radius);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sci-text);
+  background: var(--sci-fn-bg);
+  transition:
+    background .15s,
+    box-shadow .15s,
+    transform .07s;
+  outline: none;
+  user-select: none;
+}
+
+.sci-btn:active {
+  transform: scale(.93);
+}
+
+/* ── Variantes de color ── */
+
+/* Funciones científicas (sin, cos, log…) */
+.sci-fn {
+  background: var(--sci-fn-bg);
+  color: var(--sci-accent);
+  font-size: 12px;
+  letter-spacing: .03em;
+}
+.sci-fn:hover {
+  background: var(--sci-fn-hover);
+  box-shadow: 0 0 10px rgba(0, 229, 200, 0.15);
+}
+
+/* Constantes (π, e) */
+.sci-const {
+  background: var(--sci-fn-bg);
+  color: #a78bfa; /* violeta */
+}
+.sci-const:hover {
+  box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+  background: #15244a;
+}
+
+/* Paréntesis */
+.sci-paren {
+  background: var(--sci-op-bg);
+  color: var(--sci-dim);
+}
+.sci-paren:hover {
+  background: var(--sci-op-hover);
+}
+
+/* Números */
+.sci-num {
+  background: var(--sci-num-bg);
+  color: var(--sci-text);
+  font-size: 17px;
+}
+.sci-num:hover {
+  background: var(--sci-num-hover);
+}
+
+/* 0 ocupa 2 columnas */
+.sci-zero {
+  grid-column: span 2;
+}
+
+/* Operadores básicos */
+.sci-op {
+  background: var(--sci-op-bg);
+  color: #60a5fa; /* azul claro */
+  font-size: 18px;
+}
+.sci-op:hover {
+  background: var(--sci-op-hover);
+  box-shadow: 0 0 10px rgba(96, 165, 250, 0.15);
+}
+
+/* Limpiar */
+.sci-clear {
+  background: #1e1020;
+  color: var(--sci-red);
+  font-size: 15px;
+}
+.sci-clear:hover {
+  background: #2a0f14;
+  box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
+}
+
+/* Borrar un carácter */
+.sci-del {
+  background: #0f1820;
+  color: #fb923c; /* naranja */
+  font-size: 16px;
+}
+.sci-del:hover {
+  background: #1a2030;
+  box-shadow: 0 0 8px rgba(251, 146, 60, 0.15);
+}
+
+/* Signo +/- */
+.sci-sign {
+  background: var(--sci-op-bg);
+  color: var(--sci-dim);
+  font-size: 12px;
+}
+.sci-sign:hover {
+  background: var(--sci-op-hover);
+}
+
+/* Igual */
+.sci-equals {
+  background: var(--sci-accent);
+  color: #061523;
+  font-size: 22px;
+  font-weight: 800;
+  border-color: var(--sci-accent);
+  box-shadow: 0 0 18px var(--sci-eq-glow);
+  grid-row: span 2;   /* ocupa filas 6 y 7 */
+}
+.sci-equals:hover {
+  background: #00ffdf;
+  box-shadow: 0 0 28px rgba(0, 229, 200, 0.65);
+}
+.sci-equals:active {
+  transform: scale(.91);
+}
+
+/* ── Responsive: pantallas muy angostas ── */
+@media (max-width: 320px) {
+  .sci-calc {
+    padding: 12px;
+  }
+  .sci-btn {
+    height: 42px;
+    font-size: 12px;
+  }
+  .sci-result {
+    font-size: 22px;
+  }
+}

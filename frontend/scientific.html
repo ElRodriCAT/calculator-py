@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculadora Científica</title>
+  <link rel="stylesheet" href="css/sidebar.css" />
+  <link rel="stylesheet" href="css/scientific.css" />
+</head>
+<body>
+<div id="sidebar-component"></div>
+
+<div class="sci-calc">
+
+  <!-- ── Display ── -->
+  <div class="sci-display">
+    <div class="sci-expr-wrap">
+      <span class="sci-expr-label">f(x)</span>
+      <div class="sci-expr" id="sciExpr">0</div>
+    </div>
+    <div class="sci-result-wrap">
+      <div class="sci-result" id="sciResult"></div>
+    </div>
+  </div>
+
+  <!-- ── Botones ── -->
+  <div class="sci-grid">
+
+    <!-- Fila 1 – Trigonometría -->
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="sin(">sin</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="cos(">cos</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="tan(">tan</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="log(">log</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="ln(">ln</button>
+
+    <!-- Fila 2 – Raíces y potencias -->
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="√(">√</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="∛(">∛</button>
+    <button class="sci-btn sci-fn"   data-action="pow2">x²</button>
+    <button class="sci-btn sci-fn"   data-action="pow3">x³</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="^">^</button>
+
+    <!-- Fila 3 – Constantes y utilidades -->
+    <button class="sci-btn sci-const" data-action="insert" data-value="π">π</button>
+    <button class="sci-btn sci-const" data-action="insert" data-value="e">e</button>
+    <button class="sci-btn sci-paren" data-action="insert" data-value="(">(</button>
+    <button class="sci-btn sci-paren" data-action="insert" data-value=")">)</button>
+    <button class="sci-btn sci-fn"   data-action="insert" data-value="%">%</button>
+
+    <!-- Fila 4 – Números 7-8-9 -->
+    <button class="sci-btn sci-num"  data-action="insert" data-value="7">7</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="8">8</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="9">9</button>
+    <button class="sci-btn sci-op"   data-action="insert" data-value="/">÷</button>
+    <button class="sci-btn sci-clear" data-action="clear">C</button>
+
+    <!-- Fila 5 – Números 4-5-6 -->
+    <button class="sci-btn sci-num"  data-action="insert" data-value="4">4</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="5">5</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="6">6</button>
+    <button class="sci-btn sci-op"   data-action="insert" data-value="*">×</button>
+    <button class="sci-btn sci-del"  data-action="delete">⌫</button>
+
+    <!-- Fila 6 – Números 1-2-3 -->
+    <button class="sci-btn sci-num"  data-action="insert" data-value="1">1</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="2">2</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value="3">3</button>
+    <button class="sci-btn sci-op"   data-action="insert" data-value="-">−</button>
+    <button class="sci-btn sci-equals" data-action="equals">=</button>
+
+    <!-- Fila 7 – 0, punto, más -->
+    <button class="sci-btn sci-sign" data-action="sign">+/-</button>
+    <button class="sci-btn sci-num sci-zero" data-action="insert" data-value="0">0</button>
+    <button class="sci-btn sci-num"  data-action="insert" data-value=".">.</button>
+    <button class="sci-btn sci-op"   data-action="insert" data-value="+">+</button>
+
+  </div>
+</div>
+
+<script src="js/sidebar.js"></script>
+<script src="js/scientific.js"></script>
+</body>
+</html>
