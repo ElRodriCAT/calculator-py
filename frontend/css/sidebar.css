@@ -1,0 +1,57 @@
+body {
+  margin-left: 220px;
+  transition: margin-left 0.3s;
+}
+
+body.sidebar-collapsed {
+  margin-left: 60px;
+}
+
+.sidebar {
+  width: 220px;
+  height: 100vh;
+  background: #222;
+  color: white;
+  padding-top: 10px;
+  box-sizing: border-box;
+  transition: width 0.3s;
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 22px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.menu {
+  list-style: none;
+  padding: 20px 0 0 0;
+}
+
+.menu li {
+  padding: 10px 20px;
+}
+
+.menu a {
+  color: white;
+  text-decoration: none;
+  display: block;
+  transition: opacity 0.3s;
+}
+
+/* Cuando está contraído */
+.sidebar.collapsed .menu a {
+  opacity: 0;
+  pointer-events: none;
+}
